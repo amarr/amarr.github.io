@@ -2,7 +2,7 @@
 I currently serve as the Chief Technology Officer of Aira, an innovative startup founded in 2015 with a goal to bridge the information gap for those with vision loss. My career includes leadership roles at some of the world’s most recognized technology companies, including Intuit and Blizzard Entertainment, where I am credited in franchises such as the incredibly successful World of Warcraft. I joined Aira in December of 2015 and lead product development efforts across hardware, software, and AI for Aira’s ever-growing community of Explorers. I hold a Bachelor’s Degree in Computer Science from the University of California, Irvine.
 
 # Work History
-I have held a variety of product and technology roles across many several companies, large and small.
+I have held a number of product and technology roles across several companies, large and small.
 
 ## Aira - CTO & Head of Product
 [Aira](https://aira.io) offers an innovative service that is designed to help blind and low-vision users gain independence. The product provides personalized assistance from a network of certified agents, including family, friends, and volunteers. Our agents use a real-time interactive cloud-based dashboard purpose-built to process live data streams from cameras, GPS, and other sensor systems from wearable platforms.
@@ -29,7 +29,7 @@ Some of my recent speaking engagements.
 * [CSUN](http://www.csun.edu/cod/conference/2018/sessions/index.php/public/presentations/view/414)
 
 # Interests
-I have a variety of interests including biking, traveling, and taking care of my [chow chow](https://www.google.com/search?q=black+chow+chow)
+I have a variety of interests including biking, traveling, and taking care of my [chow chow](https://www.google.com/search?q=black+chow+chow), Bobo.
 
 # Contact
 You can contact me via any of the following
