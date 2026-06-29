@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Line of Sight — Player Aid · Apex Legends: The Board Game</title>
+<style>
+  :root{
+    --ink:#1b232c; --muted:#5b6b7b; --muted2:#7a8794; --line:#d4dbe3;
+    --accent:#da292a; --accent2:#f04e23; --panel:#ffffff; --bg:#eef1f5;
+    --src:#2563eb; --clear:#15803d; --block:#dc2626; --cover:#f59e0b; --violet:#7c3aed;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:"Segoe UI",system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
+    color:var(--ink); background:var(--bg); line-height:1.4;
+    -webkit-print-color-adjust:exact; print-color-adjust:exact;
+  }
+  .sheet{max-width:1180px;margin:18px auto;background:var(--panel);
+    box-shadow:0 6px 30px rgba(20,30,45,.16);border-radius:10px;overflow:hidden}
+  /* Header */
+  header{background:#12181f;color:#fff;padding:16px 22px;position:relative;
+    border-bottom:4px solid var(--accent)}
+  header::before{content:"";position:absolute;top:0;left:0;height:100%;width:8px;background:var(--accent)}
+  header h1{margin:0;font-size:26px;letter-spacing:.06em;text-transform:uppercase;font-weight:800}
+  header h1 b{color:var(--accent2)}
+  header .sub{margin-top:3px;font-size:12.5px;color:#aab6c4;letter-spacing:.02em}
+  /* Intro / procedure + key */
+  .intro{display:grid;grid-template-columns:1.35fr 1fr;gap:14px;padding:14px 22px;
+    border-bottom:1px solid var(--line);background:#f8fafc}
+  .proc h2,.key h2{margin:0 0 6px;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent)}
+  .proc ol{margin:0;padding-left:18px}
+  .proc li{margin:2px 0;font-size:12.5px}
+  .proc .tip{margin-top:7px;font-size:11.5px;color:#415066;background:#fff;
+    border-left:3px solid var(--accent2);padding:5px 8px;border-radius:3px}
+  .key ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:3px 12px}
+  .key li{display:flex;align-items:center;gap:7px;font-size:11.5px}
+  .key svg{flex:0 0 auto}
+  /* Cards */
+  main{display:grid;grid-template-columns:repeat(3,1fr);gap:0;
+    background:var(--line)}
+  article{background:#fff;padding:13px 16px 15px}
+  article h3{margin:0 0 6px;font-size:14.5px;color:var(--ink);display:flex;align-items:baseline;gap:8px}
+  article h3 .n{display:inline-flex;align-items:center;justify-content:center;
+    width:21px;height:21px;border-radius:50%;background:var(--accent);color:#fff;font-size:12px;font-weight:800;flex:0 0 auto}
+  article h3 .pg{margin-left:auto;font-size:10.5px;color:#8a97a6;font-weight:600;letter-spacing:.03em}
+  article p{margin:5px 0;font-size:12px;color:#2c3742}
+  article ul{margin:5px 0;padding-left:16px}
+  article li{font-size:12px;margin:2px 0}
+  .fig{margin:8px 0 4px;background:#fbfcfe;border:1px solid #e6ebf1;border-radius:6px;padding:6px}
+  .fig svg{width:100%;height:auto;display:block}
+  .cap{font-size:10.5px;color:#6a7785;margin-top:3px;text-align:center}
+  code,b.k{background:#eef2f7;border:1px solid #dde4ec;border-radius:3px;padding:0 4px;font-size:11px;
+    font-family:ui-monospace,"Cascadia Code",Consolas,monospace;color:#2b3a4a;white-space:nowrap}
+  .tag{font-family:ui-monospace,Consolas,monospace;font-weight:700;font-size:11px;color:#37434f}
+  footer{padding:9px 22px;font-size:10.5px;color:#7c8794;background:#f8fafc;border-top:1px solid var(--line);
+    display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+  /* SVG semantic styling */
+  svg .gl{stroke:#dde3ea;stroke-width:1}
+  svg .frame{fill:none;stroke:#c4cdd6;stroke-width:1.5}
+  svg .lvl1{fill:#e4edf7}
+  svg .lvl2{fill:#c9d6e8}
+  svg .zone{fill:rgba(220,38,38,.16)}
+  svg .wall{stroke:#2b3440;stroke-width:7;stroke-linecap:round}
+  svg .cover{stroke:var(--cover);stroke-width:7;stroke-linecap:round;stroke-dasharray:1.5 6}
+  svg .losC{stroke:var(--clear);stroke-width:3;fill:none;marker-end:url(#ahG)}
+  svg .losB{stroke:var(--block);stroke-width:3;fill:none;stroke-dasharray:8 5;marker-end:url(#ahR)}
+  svg .meas{stroke:var(--violet);stroke-width:1.6;marker-start:url(#ahV);marker-end:url(#ahV)}
+  svg .tok{stroke:#fff;stroke-width:2.5}
+  svg .ts{fill:var(--src)} svg .tc{fill:var(--clear)} svg .tb{fill:var(--block)}
+  svg .tl{fill:#fff;font:800 13px "Segoe UI",sans-serif;text-anchor:middle;dominant-baseline:central}
+  svg .lab{font:700 11px "Segoe UI",sans-serif;fill:#fff;text-anchor:middle;dominant-baseline:central}
+  svg .labd{font:700 11px "Segoe UI",sans-serif;fill:#415066;text-anchor:middle}
+  svg .labx{font:800 12px "Segoe UI",sans-serif;fill:var(--violet);text-anchor:middle}
+  svg .labz{font:700 10.5px "Segoe UI",sans-serif;fill:#b01818;text-anchor:middle}
+  svg .xmk{stroke:var(--block);stroke-width:2.5;stroke-linecap:round}
+  svg .cornerR{fill:none;stroke:var(--violet);stroke-width:2}
+
+  @media (max-width:980px){ main{grid-template-columns:repeat(2,1fr)} .intro{grid-template-columns:1fr} }
+  @media (max-width:620px){ main{grid-template-columns:1fr} .key ul{grid-template-columns:1fr} }
+
+  @media print{
+    @page{ size:A4 landscape; margin:7mm; }
+    body{background:#fff}
+    .sheet{box-shadow:none;margin:0;max-width:none;border-radius:0}
+    main{grid-template-columns:repeat(3,1fr)}
+    article,.intro{break-inside:avoid}
+    header{padding:10px 16px}
+    header h1{font-size:21px}
+  }
+</style>
+</head>
+<body>
+<div class="sheet">
+
+  <header>
+    <h1>Line of <b>Sight</b></h1>
+    <div class="sub">Player aid · <i>Apex Legends: The Board Game</i> — condensed from the Core Rules, pp. 23–26 (Line of Sight) &amp; p. 29 (Cover)</div>
+  </header>
+
+  <!-- defs shared by all diagrams -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+    <marker id="ahG" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#15803d"/></marker>
+    <marker id="ahR" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#dc2626"/></marker>
+    <marker id="ahV" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7c3aed"/></marker>
+  </defs></svg>
+
+  <section class="intro">
+    <div class="proc">
+      <h2>How to check Line of Sight</h2>
+      <ol>
+        <li>Draw an imaginary <b>bird's-eye line</b> from the <b>center of your space</b> (the <b>source</b>) to the <b>center of the target space</b> (or target intersection).</li>
+        <li>Find every <b class="k">BLOCKAGE</b> the line crosses (on Crossroads: <b>Building Walls</b> &amp; standalone <b>Walls</b>).</li>
+        <li>Apply the rules at right. If nothing blocks, you have LoS. A <b>BLOCKAGE blocks both ways</b> — there is never one-way sight.</li>
+      </ol>
+      <div class="tip"><b>Cover ≠ blockage.</b> Objects with <b class="k">COVER</b> (Half-Walls, Supply Bins, Respawn Beacons) <b>never block LoS</b> — but a target adjacent to one may be <b>in cover</b> (see panel 5).</div>
+    </div>
+    <div class="key">
+      <h2>Key</h2>
+      <ul>
+        <li><svg width="26" height="18"><circle cx="13" cy="9" r="8" class="tok ts"/></svg> Source (shooter)</li>
+        <li><svg width="26" height="18"><circle cx="13" cy="9" r="8" class="tok tc"/></svg> Target — has LoS</li>
+        <li><svg width="26" height="18"><circle cx="13" cy="9" r="8" class="tok tb"/></svg> Target — no LoS</li>
+        <li><svg width="26" height="18"><line x1="3" y1="9" x2="23" y2="9" class="wall"/></svg> Wall = <span class="tag">BLOCKAGE</span></li>
+        <li><svg width="26" height="18"><line x1="3" y1="9" x2="23" y2="9" class="cover"/></svg> Half-Wall = <span class="tag">COVER</span></li>
+        <li><svg width="26" height="18"><line x1="3" y1="9" x2="20" y2="9" class="losC"/></svg> Clear LoS</li>
+        <li><svg width="26" height="18"><line x1="3" y1="9" x2="20" y2="9" class="losB"/></svg> Blocked LoS</li>
+        <li><svg width="26" height="18"><rect x="3" y="2" width="20" height="14" class="zone"/></svg> Area with no LoS</li>
+      </ul>
+    </div>
+  </section>
+
+  <main>
+
+    <!-- 1. BASICS -->
+    <article>
+      <h3><span class="n">1</span> The basic check <span class="pg">p. 23</span></h3>
+      <p>LoS runs <b>center-to-center</b>. If an effective <b class="k">BLOCKAGE</b> sits on the line, sight is blocked; if the line passes clear (even just <i>below/around</i> a wall), you can see.</p>
+      <div class="fig">
+        <svg viewBox="0 0 328 232" role="img" aria-label="A wall blocks the straight line to the upper target but the lower target is seen around it">
+          <path class="gl" d="M20 20V212M68 20V212M116 20V212M164 20V212M212 20V212M260 20V212M308 20V212"/>
+          <path class="gl" d="M20 20H308M20 68H308M20 116H308M20 164H308M20 212H308"/>
+          <rect x="20" y="20" width="288" height="192" class="frame"/>
+          <!-- clear LoS to lower target -->
+          <line x1="92" y1="92" x2="268" y2="180" class="losC"/>
+          <!-- blocked LoS to right target -->
+          <line x1="92" y1="92" x2="266" y2="92" class="losB"/>
+          <!-- wall -->
+          <line x1="164" y1="68" x2="164" y2="116" class="wall"/>
+          <!-- crossing X mark -->
+          <line x1="158" y1="86" x2="170" y2="98" class="xmk"/><line x1="170" y1="86" x2="158" y2="98" class="xmk"/>
+          <!-- tokens -->
+          <circle cx="92" cy="92" r="14" class="tok ts"/><text x="92" y="92" class="tl">S</text>
+          <circle cx="284" cy="92" r="14" class="tok tb"/><text x="284" y="92" class="tl">✕</text>
+          <circle cx="284" cy="188" r="14" class="tok tc"/><text x="284" y="188" class="tl">✓</text>
+        </svg>
+        <div class="cap">Straight into the wall → blocked. Line passing clear below it → LoS.</div>
+      </div>
+    </article>
+
+    <!-- 2. THREE QUICK RULES -->
+    <article>
+      <h3><span class="n">2</span> Three quick rules <span class="pg">p. 23</span></h3>
+      <ul>
+        <li><b>45° rule:</b> a <b class="k">BLOCKAGE</b> touched <b>only at its corner</b> has no effect.</li>
+        <li><b>Connected components:</b> if the line crosses a shared intersection, it only matters if <b>both</b> components are <b class="k">BLOCKAGE</b>.</li>
+        <li><b>Higher than both:</b> a <b class="k">BLOCKAGE</b> higher than <b>both</b> source and target always blocks.</li>
+      </ul>
+      <div class="fig">
+        <svg viewBox="0 0 280 232" role="img" aria-label="The line of sight grazes only the corner of a wall, so sight is clear by the 45 degree rule">
+          <path class="gl" d="M20 20V212M68 20V212M116 20V212M164 20V212M212 20V212M260 20V212"/>
+          <path class="gl" d="M20 20H260M20 68H260M20 116H260M20 164H260M20 212H260"/>
+          <rect x="20" y="20" width="240" height="192" class="frame"/>
+          <!-- diagonal clear LoS through the wall's corner -->
+          <line x1="92" y1="92" x2="175" y2="175" class="losC"/>
+          <!-- wall whose bottom corner (164,164) sits exactly on the line -->
+          <line x1="164" y1="116" x2="164" y2="164" class="wall"/>
+          <circle cx="164" cy="164" r="7" class="cornerR"/>
+          <text x="139" y="150" class="labx">45°</text>
+          <circle cx="92" cy="92" r="14" class="tok ts"/><text x="92" y="92" class="tl">S</text>
+          <circle cx="188" cy="188" r="14" class="tok tc"/><text x="188" y="188" class="tl">✓</text>
+        </svg>
+        <div class="cap">The line only touches the wall's corner → no effect (clear).</div>
+      </div>
+    </article>
+
+    <!-- 3. THE X RULE -->
+    <article>
+      <h3><span class="n">3</span> The “X” rule <span class="pg">pp. 24–25</span></h3>
+      <p>Used when the <b class="k">BLOCKAGE</b> is <b>not higher</b> than both models. The higher model is the <b>Upper space</b>, the other the <b>Lower space</b>.</p>
+      <ol style="margin:5px 0;padding-left:16px;font-size:12px">
+        <li>From the Upper space, find the <b>farthest same-level</b> <b class="k">BLOCKAGE</b> edge on the line. <i>(If it's an edge of your own space, distance = 0 → it doesn't count.)</i></li>
+        <li>Extend that edge into a line. <b style="color:#7c3aed">X</b> = the number of spaces from the Upper space to that line — <b>count the gap, not the space your Legend stands on</b>.</li>
+        <li><b>1-level</b> drop → no LoS within <b style="color:#7c3aed">X</b> of the blockage. <b>2-level</b> drop → within <b style="color:#7c3aed">X×2</b>.</li>
+      </ol>
+      <div class="fig">
+        <svg viewBox="0 0 376 232" role="img" aria-label="A Legend one space back from a ledge gives X equals 1, so only the single ground space behind the wall is hidden">
+          <rect x="20" y="20" width="144" height="192" class="lvl1"/>
+          <rect x="164" y="20" width="48" height="192" class="zone"/>
+          <path class="gl" d="M20 20V212M68 20V212M116 20V212M164 20V212M212 20V212M260 20V212M308 20V212M356 20V212"/>
+          <path class="gl" d="M20 20H356M20 68H356M20 116H356M20 164H356M20 212H356"/>
+          <rect x="20" y="20" width="336" height="192" class="frame"/>
+          <!-- blockage = right edge of the L1 platform -->
+          <line x1="164" y1="20" x2="164" y2="212" class="wall"/>
+          <!-- X measurement = the single gap space between Legend and wall -->
+          <line x1="116" y1="33" x2="164" y2="33" class="meas"/>
+          <text x="140" y="28" class="labx">X = 1</text>
+          <!-- LoS -->
+          <line x1="92" y1="140" x2="172" y2="100" class="losB"/>
+          <line x1="158" y1="98" x2="170" y2="110" class="xmk"/><line x1="170" y1="98" x2="158" y2="110" class="xmk"/>
+          <line x1="92" y1="140" x2="266" y2="140" class="losC"/>
+          <!-- labels -->
+          <text x="40" y="205" class="lab">L1</text>
+          <text x="188" y="205" class="labz">no LoS</text>
+          <!-- tokens -->
+          <circle cx="92" cy="140" r="14" class="tok ts"/><text x="92" y="140" class="tl">S</text>
+          <circle cx="188" cy="92" r="14" class="tok tb"/><text x="188" y="92" class="tl">✕</text>
+          <circle cx="284" cy="140" r="14" class="tok tc"/><text x="284" y="140" class="tl">✓</text>
+        </svg>
+        <div class="cap">Legend is <b>1 space</b> back from the ledge → <b>X = 1</b>. With a 1-level drop, only the single ground space behind the wall is hidden; beyond it, LoS returns. <i>(2-level drop → X×2 = 2.)</i></div>
+      </div>
+    </article>
+
+    <!-- 4. LEVEL 2 -> GROUND -->
+    <article>
+      <h3><span class="n">4</span> Level 2 → ground <span class="pg">pp. 25–26</span></h3>
+      <p>Shooting from <b>Level 2</b> at <b>ground level</b>, past a <b>Level-1</b> <b class="k">BLOCKAGE</b>: it blocks <b>only the single ground space immediately behind it</b>. Everything else stays visible.</p>
+      <div class="fig">
+        <svg viewBox="0 0 328 232" role="img" aria-label="From level two, a level one wall hides only the one ground space directly behind it">
+          <rect x="20" y="20" width="96" height="96" class="lvl2"/>
+          <rect x="164" y="164" width="48" height="48" class="zone"/>
+          <path class="gl" d="M20 20V212M68 20V212M116 20V212M164 20V212M212 20V212M260 20V212M308 20V212"/>
+          <path class="gl" d="M20 20H308M20 68H308M20 116H308M20 164H308M20 212H308"/>
+          <rect x="20" y="20" width="288" height="192" class="frame"/>
+          <!-- level 1 wall (horizontal edge) -->
+          <line x1="164" y1="164" x2="212" y2="164" class="wall"/>
+          <text x="232" y="158" class="labd">L1 wall</text>
+          <!-- LoS -->
+          <line x1="92" y1="92" x2="175" y2="175" class="losB"/>
+          <line x1="158" y1="158" x2="170" y2="170" class="xmk"/><line x1="170" y1="158" x2="158" y2="170" class="xmk"/>
+          <line x1="92" y1="92" x2="268" y2="180" class="losC"/>
+          <text x="40" y="40" class="lab">L2</text>
+          <text x="188" y="200" class="labz">blocked</text>
+          <circle cx="92" cy="92" r="14" class="tok ts"/><text x="92" y="92" class="tl">S</text>
+          <circle cx="188" cy="188" r="14" class="tok tb"/><text x="188" y="188" class="tl">✕</text>
+          <circle cx="284" cy="188" r="14" class="tok tc"/><text x="284" y="188" class="tl">✓</text>
+        </svg>
+        <div class="cap">Only the space directly behind the L1 wall is hidden from the L2 shooter.</div>
+      </div>
+    </article>
+
+    <!-- 5. COVER -->
+    <article>
+      <h3><span class="n">5</span> Cover <span class="pg">p. 29</span></h3>
+      <p><b class="k">COVER</b> objects don't block LoS — you can still shoot — but the target is <b>behind cover</b> (each affected Aim card becomes an automatic <b>Miss</b>) when:</p>
+      <ul>
+        <li>the LoS <b>crosses a <b class="k">COVER</b> object</b> and the target is <b>adjacent</b> to it; <b>or</b></li>
+        <li>the LoS crosses an <b>intersection of connected objects</b>, at least one provides <b class="k">COVER</b>, and the target is <b>adjacent</b> to it.</li>
+      </ul>
+      <div class="fig">
+        <svg viewBox="0 0 328 184" role="img" aria-label="The line of sight crosses a half wall next to the target; sight is clear but the target is in cover">
+          <path class="gl" d="M20 20V164M68 20V164M116 20V164M164 20V164M212 20V164M260 20V164M308 20V164"/>
+          <path class="gl" d="M20 20H308M20 68H308M20 116H308M20 164H308"/>
+          <rect x="20" y="20" width="288" height="144" class="frame"/>
+          <!-- clear LoS through the half-wall to the target -->
+          <line x1="92" y1="92" x2="218" y2="92" class="losC"/>
+          <!-- half-wall (cover) on the edge adjacent to the target -->
+          <line x1="212" y1="68" x2="212" y2="116" class="cover"/>
+          <circle cx="92" cy="92" r="14" class="tok ts"/><text x="92" y="92" class="tl">S</text>
+          <circle cx="236" cy="92" r="14" class="tok tc"/><text x="236" y="92" class="tl">T</text>
+          <text x="236" y="132" class="labd" style="fill:#b06a00">IN COVER</text>
+        </svg>
+        <div class="cap">LoS is clear through the Half-Wall, but T is adjacent to it → <b>in cover</b>.</div>
+      </div>
+    </article>
+
+    <!-- 6. REMEMBER -->
+    <article>
+      <h3><span class="n">6</span> Remember <span class="pg">recap</span></h3>
+      <ul>
+        <li><b>Center-to-center</b>, bird's-eye. Edges/intersections of your own space are at <b>distance 0</b>.</li>
+        <li>LoS is always <b>two-way</b>.</li>
+        <li>A <b class="k">BLOCKAGE</b> edge at <b>distance 0</b> from the Upper space <b>doesn't count</b>.</li>
+        <li>For the X-rule, use the <b>farthest</b> same-level blockage edge on the line.</li>
+        <li><b class="k">COVER</b> (Half-Walls, Supply Bins, Respawn Beacons) <b>never blocks</b> LoS.</li>
+        <li>Auto-outcomes by Aim card: target <b>lower</b> = Hit · <b>higher</b> = Miss · <b>behind cover</b> = Miss <span class="pg" style="margin:0">(p. 29)</span></li>
+      </ul>
+      <div class="fig" style="background:#12181f;border-color:#12181f">
+        <svg viewBox="0 0 328 96" role="img" aria-label="Summary: blocked line versus clear line">
+          <line x1="22" y1="34" x2="150" y2="34" class="losB"/>
+          <line x1="86" y1="20" x2="86" y2="48" class="wall"/>
+          <text x="170" y="38" style="fill:#fff;font:700 12px Segoe UI">crosses a BLOCKAGE → no LoS</text>
+          <line x1="22" y1="72" x2="150" y2="72" class="losC"/>
+          <line x1="86" y1="58" x2="86" y2="86" class="cover"/>
+          <text x="170" y="76" style="fill:#fff;font:700 12px Segoe UI">crosses only COVER → LoS (in cover)</text>
+        </svg>
+      </div>
+    </article>
+
+  </main>
+
+  <footer>
+    <span>Unofficial player aid · rules condensed &amp; paraphrased from the <i>Apex Legends: The Board Game</i> Core Rules (Glass Cannon Unplugged, 2024). For exact wording &amp; examples see <b>rules.md</b>, pp. 23–26 &amp; 29.</span>
+    <span>Prints best on A4/Letter <b>landscape</b>.</span>
+  </footer>
+
+</div>
+</body>
+</html>
