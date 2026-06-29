@@ -4,6 +4,9 @@ I currently serve as the Chief Technology Officer of Aira, an innovative startup
 # Work History
 I have held a number of product and technology roles across several companies, large and small.
 
+## Intuit - Group Product Manager
+Leading the PM team, product strategy, design and execution for TurboTax Expert Full Service.
+
 ## Aira - CTO & Head of Product
 [Aira](https://aira.io) offers an innovative service that is designed to help blind and low-vision users gain independence. The product provides personalized assistance from a network of certified agents, including family, friends, and volunteers. Our agents use a real-time interactive cloud-based dashboard purpose-built to process live data streams from cameras, GPS, and other sensor systems from wearable platforms.
 
