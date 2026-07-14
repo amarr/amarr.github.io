@@ -1,0 +1,545 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Apex Legends: The Board Game — Rules Q&amp;A Quick Reference</title>
+<style>
+  :root{
+    --bg:#0f1115; --bg-elev:#151922; --card:#1b202a; --card-2:#20263180;
+    --border:#2a3140; --text:#e7ebf1; --muted:#98a1b0; --muted-2:#727c8c;
+    --accent:#e6332a; --accent-2:#ff7a45; --accent-soft:rgba(230,51,42,.13);
+    --good:#3fb96b; --warn:#e8b13a; --shadow:0 2px 4px rgba(0,0,0,.35),0 8px 24px rgba(0,0,0,.25);
+    --radius:14px;
+  }
+  :root[data-theme="light"]{
+    --bg:#f4f6fa; --bg-elev:#ffffff; --card:#ffffff; --card-2:#f7f9fc;
+    --border:#e0e5ee; --text:#1a1f29; --muted:#5a6472; --muted-2:#8a93a3;
+    --accent:#c62828; --accent-2:#d8551f; --accent-soft:rgba(198,40,40,.08);
+    --good:#1f8a4c; --warn:#a9791a; --shadow:0 1px 2px rgba(20,30,50,.06),0 6px 20px rgba(20,30,50,.08);
+  }
+  @media (prefers-color-scheme: light){
+    :root:not([data-theme]){
+      --bg:#f4f6fa; --bg-elev:#ffffff; --card:#ffffff; --card-2:#f7f9fc;
+      --border:#e0e5ee; --text:#1a1f29; --muted:#5a6472; --muted-2:#8a93a3;
+      --accent:#c62828; --accent-2:#d8551f; --accent-soft:rgba(198,40,40,.08);
+      --good:#1f8a4c; --warn:#a9791a; --shadow:0 1px 2px rgba(20,30,50,.06),0 6px 20px rgba(20,30,50,.08);
+    }
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:var(--bg); color:var(--text);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.62; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+  }
+  .wrap{max-width:1060px; margin:0 auto; padding:0 20px 96px}
+
+  /* Header */
+  header.hero{
+    position:relative; padding:40px 20px 30px; margin-bottom:6px;
+    background:
+      radial-gradient(1200px 300px at 80% -40%, var(--accent-soft), transparent 70%),
+      linear-gradient(180deg, var(--bg-elev), var(--bg));
+    border-bottom:1px solid var(--border);
+  }
+  .hero-inner{max-width:1060px; margin:0 auto; padding:0 20px}
+  .kicker{
+    display:inline-flex; align-items:center; gap:8px; font-size:12px; font-weight:700;
+    letter-spacing:.14em; text-transform:uppercase; color:var(--accent);
+    background:var(--accent-soft); border:1px solid var(--border);
+    padding:5px 11px; border-radius:999px;
+  }
+  h1{font-size:clamp(26px,4.4vw,40px); line-height:1.12; margin:14px 0 6px; letter-spacing:-.01em}
+  h1 .sub{color:var(--muted); font-weight:600}
+  .lede{color:var(--muted); max-width:70ch; margin:6px 0 0; font-size:15.5px}
+  .meta{color:var(--muted-2); font-size:12.5px; margin-top:14px}
+  .theme-btn{
+    position:absolute; top:22px; right:22px; cursor:pointer;
+    background:var(--card); color:var(--text); border:1px solid var(--border);
+    border-radius:10px; padding:8px 12px; font-size:13px; font-weight:600; box-shadow:var(--shadow);
+  }
+  .theme-btn:hover{border-color:var(--accent)}
+
+  /* Sticky controls */
+  .controls{
+    position:sticky; top:0; z-index:20; padding:12px 0 12px;
+    background:color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter:blur(10px); border-bottom:1px solid var(--border); margin-bottom:26px;
+  }
+  .controls-inner{display:flex; flex-wrap:wrap; gap:12px; align-items:center}
+  .search{position:relative; flex:1 1 260px; min-width:220px}
+  .search input{
+    width:100%; padding:11px 14px 11px 38px; border-radius:11px;
+    border:1px solid var(--border); background:var(--card); color:var(--text); font-size:15px;
+  }
+  .search input:focus{outline:none; border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft)}
+  .search svg{position:absolute; left:12px; top:50%; transform:translateY(-50%); color:var(--muted-2)}
+  .count{font-size:13px; color:var(--muted); white-space:nowrap}
+
+  /* TOC */
+  nav.toc{display:flex; flex-wrap:wrap; gap:8px; margin:0 0 30px}
+  nav.toc a{
+    font-size:13px; font-weight:600; color:var(--muted); text-decoration:none;
+    padding:7px 12px; border:1px solid var(--border); border-radius:999px; background:var(--card);
+    transition:.15s;
+  }
+  nav.toc a:hover{color:var(--text); border-color:var(--accent); background:var(--accent-soft)}
+
+  /* Gotchas box */
+  .gotchas{
+    border:1px solid var(--border); border-left:3px solid var(--accent);
+    background:linear-gradient(180deg,var(--card),var(--card-2));
+    border-radius:var(--radius); padding:18px 20px; margin:0 0 34px; box-shadow:var(--shadow);
+  }
+  .gotchas h2{font-size:15px; margin:0 0 12px; letter-spacing:.02em; text-transform:uppercase; color:var(--accent)}
+  .gotchas ul{margin:0; padding-left:0; list-style:none; display:grid; gap:9px}
+  .gotchas li{position:relative; padding-left:26px; font-size:14.5px}
+  .gotchas li::before{
+    content:"!"; position:absolute; left:0; top:1px; width:18px; height:18px; line-height:18px;
+    text-align:center; font-weight:800; font-size:11px; color:#fff; background:var(--accent); border-radius:6px;
+  }
+
+  /* Sections + cards */
+  section.group{margin:0 0 40px; scroll-margin-top:150px}
+  .group > h2{
+    font-size:13px; font-weight:800; letter-spacing:.16em; text-transform:uppercase;
+    color:var(--muted-2); margin:0 0 16px; padding-bottom:10px; border-bottom:1px solid var(--border);
+    display:flex; align-items:center; gap:10px;
+  }
+  .group > h2 .num{
+    color:var(--accent); font-size:12px; border:1px solid var(--border);
+    background:var(--accent-soft); border-radius:7px; padding:2px 8px; letter-spacing:.05em;
+  }
+  .qa{
+    background:var(--card); border:1px solid var(--border); border-radius:var(--radius);
+    padding:18px 20px 6px; margin:0 0 14px; box-shadow:var(--shadow); transition:border-color .15s;
+  }
+  .qa:hover{border-color:color-mix(in srgb,var(--accent) 45%,var(--border))}
+  .qa .q{
+    font-size:17px; font-weight:700; margin:0 0 8px; color:var(--text); letter-spacing:-.005em;
+    display:flex; gap:10px; align-items:baseline;
+  }
+  .qa .q::before{content:"Q"; color:var(--accent); font-weight:800; font-size:13px; flex:none; transform:translateY(-1px)}
+  .qa .a{color:var(--text)}
+  .qa .a p{margin:0 0 12px}
+  .qa .a p:first-child{margin-top:0}
+  strong{color:var(--text); font-weight:700}
+  .accent{color:var(--accent); font-weight:700}
+  code, .tag{
+    font-family:"SF Mono","Cascadia Code",Consolas,"Liberation Mono",monospace; font-size:.86em;
+  }
+  .tag{
+    background:var(--card-2); border:1px solid var(--border); border-radius:5px;
+    padding:1px 6px; color:var(--muted); white-space:nowrap; font-weight:600; letter-spacing:.02em;
+  }
+  .cite{
+    display:inline-block; font-size:12.5px; color:var(--muted-2); font-weight:600;
+    border-top:1px dashed var(--border); padding-top:8px; margin:2px 0 12px; width:100%;
+  }
+  .cite::before{content:"\1F4D6\00A0"; opacity:.7}
+
+  /* Tables */
+  .tbl-scroll{overflow-x:auto; margin:4px 0 14px; border:1px solid var(--border); border-radius:10px}
+  table{border-collapse:collapse; width:100%; font-size:13.5px; min-width:340px}
+  thead th{
+    text-align:left; background:var(--card-2); color:var(--muted); font-weight:700;
+    padding:8px 12px; border-bottom:1px solid var(--border); white-space:nowrap;
+    font-size:12px; letter-spacing:.03em; text-transform:uppercase;
+  }
+  tbody td{padding:8px 12px; border-bottom:1px solid var(--border); vertical-align:top}
+  tbody tr:last-child td{border-bottom:none}
+  tbody tr:nth-child(even){background:var(--card-2)}
+  .pill{font-weight:700; font-size:11.5px; padding:1px 8px; border-radius:999px; border:1px solid var(--border)}
+  .r-common{color:var(--muted)} .r-rare{color:#4c8ff0} .r-epic{color:#b667e0} .r-legend{color:var(--accent-2)}
+
+  .noresults{display:none; text-align:center; color:var(--muted); padding:40px; font-size:15px}
+
+  footer{margin-top:50px; padding-top:24px; border-top:1px solid var(--border); color:var(--muted); font-size:13.5px}
+  footer h3{color:var(--text); font-size:14px; margin:0 0 10px; letter-spacing:.02em}
+  footer ul{margin:0 0 18px; padding-left:20px} footer li{margin:5px 0}
+  footer .warn::marker{color:var(--warn)}
+  a.src{color:var(--accent); text-decoration:none} a.src:hover{text-decoration:underline}
+
+  @media print{
+    .controls,.theme-btn,nav.toc{display:none!important}
+    body{background:#fff; color:#000}
+    .qa,.gotchas{box-shadow:none; break-inside:avoid}
+  }
+</style>
+
+<header class="hero">
+  <button class="theme-btn" id="themeBtn" aria-label="Toggle light/dark theme">◐ Theme</button>
+  <div class="hero-inner">
+    <span class="kicker">Apex Legends &middot; The Board Game</span>
+    <h1>Rules Q&amp;A <span class="sub">— Quick Reference</span></h1>
+    <p class="lede">A distilled Q&amp;A companion covering the rules questions worked through for the first-game / Battle Royale configuration (Crossroads map, Ring feature). Answers condensed for at-the-table lookup, with page citations to the Core Rules.</p>
+    <p class="meta">Source: <em>APEX_CoreRules_060624</em> (Glass Cannon Unplugged / Respawn / EA) &middot; 47&nbsp;pages &middot; Page cites map 1:1 to the printed rulebook.</p>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="controls">
+    <div class="controls-inner">
+      <div class="search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        <input id="search" type="search" placeholder="Search the Q&amp;A (e.g. shield, cover, push, grenade)&hellip;" autocomplete="off">
+      </div>
+      <span class="count" id="count"></span>
+    </div>
+  </div>
+
+  <nav class="toc">
+    <a href="#setup">1 &middot; Setup &amp; Components</a>
+    <a href="#stages">2 &middot; The Three Stages</a>
+    <a href="#weapons">3 &middot; Weapons &amp; Attachments</a>
+    <a href="#gear">4 &middot; Gear &amp; Survival</a>
+    <a href="#movement">5 &middot; Movement &amp; Positioning</a>
+    <a href="#abilities">6 &middot; Grenades &amp; Abilities</a>
+  </nav>
+
+  <div class="gotchas">
+    <h2>Counterintuitive rulings worth memorizing</h2>
+    <ul>
+      <li><strong>Respawn sets Shield to a flat 20</strong> — <em>not</em> your Body Shield's limit. Rare/Epic/Legendary shields return under-charged. <span class="cite" style="border:0;padding:0;display:inline">p.&nbsp;31</span></li>
+      <li><strong>Equipping a shield only fills you via its restore bonus.</strong> An Epic shield leaves you at <strong>30/40</strong> (not 40), because equipping restores 10 from your starting 20.</li>
+      <li><strong>Health is hard-capped at 40, permanently.</strong> Only the Shield side of your HP pool can grow.</li>
+      <li><strong>You can never be pushed off the Map</strong> — it's a Collision (stop at edge + extra damage). No ring-out kills.</li>
+      <li><strong>Optics don't extend range</strong> — they only lower To-Hit Difficulty within the optic's own range band.</li>
+      <li><strong>Thermite doesn't linger</strong> — one 15-damage hit, then the token is removed (no wall of fire).</li>
+      <li><strong>A dead Legend's already-placed timed abilities still trigger</strong> on schedule.</li>
+      <li><strong>Cover costs no MP</strong> (the Obstacle tag does), and <strong>Impassable never blocks grenades</strong>.</li>
+    </ul>
+  </div>
+
+  <!-- ============ 1. SETUP ============ -->
+  <section class="group" id="setup">
+    <h2><span class="num">Sec 1</span> Setup &amp; Components</h2>
+
+    <article class="qa">
+      <h3 class="q">How do you pick your Legend's starting gear?</h3>
+      <div class="a">
+        <p>You don't — <strong>there's no draft.</strong> Every Legend automatically begins fully equipped with the three <strong>Common</strong> gear tokens (Helmet, Body Shield, Knockdown Shield) placed in their Gear slots during setup, with the dial set to <strong>Shield&nbsp;20 / Health&nbsp;40</strong>. These Commons are deliberately set aside from the Common Loot bag and handed out directly. All three Common gears have <strong>no special effect</strong>.</p>
+        <p>Actual gear <em>choices</em> happen later, in <strong>Stage&nbsp;1: Legend Loadout</strong>, where you may equip better tokens you draw — holding only <strong>1 of each gear type</strong> at a time (drop the old one to swap).</p>
+        <span class="cite">pp. 8, 13</span>
+      </div>
+    </article>
+
+    <article class="qa">
+      <h3 class="q">What is a Legend board?</h3>
+      <div class="a">
+        <p>Your personal player mat (one per Legend) that organizes everything you carry. It has <strong>five areas</strong>: <strong>Gear slots</strong> (Helmet / Body / Knockdown, 1 each) &middot; <strong>8 Backpack slots</strong> (Attachments, Grenades, Consumables — 1 token per slot) &middot; <strong>Ammo tracks</strong> (0&ndash;5 per weapon) &middot; <strong>2 Weapon card slots</strong> (max 2 weapons) &middot; <strong>Feat slots</strong> (deck + discard). The <strong>Player screen</strong> sits on it to hide your Backpack from opponents.</p>
+        <p>Don't confuse it with the <strong>Legend info sheet</strong> (your ability reference) or the <strong>Equipment board</strong> (a separate component with a Boss-mode side).</p>
+        <span class="cite">pp. 11&ndash;13</span>
+      </div>
+    </article>
+
+    <article class="qa">
+      <h3 class="q">What are Lifeline's 13 loot tokens?</h3>
+      <div class="a">
+        <p>A loot set unique to Lifeline, tied to her <strong>Care Package</strong> ability and drawn from a separate <strong>Care Package Loot bag</strong> (not the general pools). Rarity breakdown:</p>
+        <div class="tbl-scroll"><table>
+          <thead><tr><th>Rarity</th><th>Count</th></tr></thead>
+          <tbody>
+            <tr><td><span class="r-rare">Rare</span></td><td>6</td></tr>
+            <tr><td><span class="r-epic">Epic</span></td><td>4</td></tr>
+            <tr><td><span class="r-legend">Legendary</span></td><td>3</td></tr>
+            <tr><td><strong>Total</strong></td><td><strong>13</strong> (no Commons)</td></tr>
+          </tbody>
+        </table></div>
+        <p>Notably <strong>3 Legendary</strong> tokens in one bag — vs. only 6 Legendary in the whole general supply. The reference gives rarity counts only, not the individual token identities.</p>
+        <span class="cite">p. 6</span>
+      </div>
+    </article>
+  </section>
+
+  <!-- ============ 2. STAGES ============ -->
+  <section class="group" id="stages">
+    <h2><span class="num">Sec 2</span> The Three Stages</h2>
+
+    <article class="qa">
+      <h3 class="q">What happens in Stage 1 (Legend Loadout)?</h3>
+      <div class="a">
+        <p>Kit out your squad — <strong>all players act simultaneously</strong> (no turn order):</p>
+        <p>1. <strong>Draw a Loot Pool:</strong> 4 Weapon cards + 4 Common + 4 Rare tokens. &nbsp;2. <strong>Freely trade</strong> weapons/tokens with squadmates (not enemies). &nbsp;3. <strong>Equip exactly 2 weapons</strong> and set their Ammo. &nbsp;4. Place loot into Gear/Backpack slots. &nbsp;5. <strong class="accent">Everything left over is removed from the game</strong> — so pass it or lose it.</p>
+        <span class="cite">pp. 12&ndash;13</span>
+      </div>
+    </article>
+
+    <article class="qa">
+      <h3 class="q">What happens in Stage 2 (Map Drop)?</h3>
+      <div class="a">
+        <p><strong>Prep:</strong> place 1 Reward token + 1 Epic Loot token next to each of the 4 Entrance-board edges; each Legend draws 3 Feats.</p>
+        <p><strong>Phase A — place at Entrance board (Blue first, alternating):</strong> put each Legend at an edge and take that edge's <strong>Epic token</strong> (keep/drop — <span class="accent">a drop here is removed from the game</span>).</p>
+        <p><strong>Phase B — enter the Map (Red first — Red has initiative):</strong> place each Legend outside the matching Map edge and <strong>resolve</strong> (do <em>not</em> take) the edge's Reward token. <strong>Cleanup:</strong> remove leftover Epics + all Reward tokens.</p>
+        <p><strong>Reward tokens:</strong> Move&nbsp;4 &middot; Move&nbsp;2&nbsp;+&nbsp;Rare Loot &middot; Move&nbsp;3&nbsp;+&nbsp;Common Loot &middot; Move&nbsp;3&nbsp;+&nbsp;1&nbsp;Ammo. Always resolve the Move first; your first space must be on the Map.</p>
+        <span class="cite">pp. 13&ndash;14</span>
+      </div>
+    </article>
+
+    <article class="qa">
+      <h3 class="q">How does Stage 3 (Final Encounter) work?</h3>
+      <div class="a">
+        <p>The main fight — <strong>up to 8 rounds</strong>. Each round: <strong>Red turn &rarr; Blue turn &rarr; Transition</strong> (Red always first; initiative never changes). Each <strong>turn</strong> = (1) resolve Initiative-marker effects, top&rarr;bottom; (2) activate each Legend once (<strong>2 AP</strong> each); (3) advance the marker.</p>
+        <p><strong>Win immediately</strong> by either: <strong>(a)</strong> eliminating <em>every</em> enemy Legend at least once, or <strong>(b)</strong> holding <strong>2 VP</strong> (2v2) / <strong>4 VP</strong> (3v3) at the start of a twice-eliminated enemy's activation. VP come from eliminating enemies (their Deathbox flips to your VP side).</p>
+        <p><strong>Transition phase:</strong> Ring damage to those outside the ring &rarr; each draws 1 Feat &rarr; tick cooldowns left &rarr; advance Round marker &amp; resolve it &rarr; flip Draft cards &rarr; advance Initiative. <strong>Round-8 tiebreak:</strong> most VP; then most Health among Legends still holding both Deathboxes; else stalemate.</p>
+        <span class="cite">pp. 8, 14&ndash;17</span>
+      </div>
+    </article>
+
+    <article class="qa">
+      <h3 class="q">What can a Legend do with its 2 AP?</h3>
+      <div class="a">
+        <p><strong>Basic actions (1 AP each; repeatable unless noted):</strong> Move&nbsp;2 &middot; Interact&nbsp;+&nbsp;Move&nbsp;1 &middot; <strong>Shoot</strong> (<span class="accent">once per activation only</span>) &middot; Use&nbsp;+&nbsp;Move&nbsp;1 &middot; Melee&nbsp;+&nbsp;Move&nbsp;1 &middot; Destroy&nbsp;2&nbsp;+&nbsp;Move&nbsp;1 &middot; Respawn (if eliminated — must be your first action).</p>
+        <p><strong>Plus:</strong> card actions (Free / 1 / 2 AP) &middot; <strong>Rush</strong> (discard a Feat for Move&nbsp;1 or +1&nbsp;MP; once/activation, no AP) &middot; free <strong>drop/pick-up</strong> of tokens before or after any action. Outside your own activation you may only play <span class="tag">REACTION</span> and <span class="tag">INSTANT</span> cards.</p>
+        <span class="cite">pp. 15&ndash;16</span>
+      </div>
+    </article>
+  </section>
+
+  <!-- ============ 3. WEAPONS ============ -->
+  <section class="group" id="weapons">
+    <h2><span class="num">Sec 3</span> Weapons &amp; Attachments</h2>
+
+    <article class="qa">
+      <h3 class="q">What is the gold &#9650;/&#9660; chevron next to Damage / Aim cards?</h3>
+      <div class="a">
+        <p>A <strong>Hop-Up</strong> indicator (weapon-card callout&nbsp;#11) — the gun is a factory-modified variant of its base model. <strong class="accent">&#9650; = that stat is better</strong> than the base; <strong class="accent">&#9660; = worse</strong>. It's purely informational (the printed stat already includes the change); it just explains why a number looks unusually high or low. A Hop-Up may also add a yellow <span class="tag">PASSIVE</span> effect.</p>
+        <p>Different from the &#9650;/&#9660; on <em>attachment tokens</em> — the Hop-Up chevrons are baked into the weapon card itself.</p>
+        <span class="cite">pp. 26&ndash;27, 45</span>
+      </div>
+    </article>
+
+    <article class="qa">
+      <h3 class="q">Do some weapons come with preinstalled attachments?</h3>
+      <div class="a">
+        <p>Yes — <strong>Printed Attachments</strong> (callout&nbsp;#10), found on the <strong>32 Fully Kitted Weapon cards</strong>. They're <strong>always active</strong> and <strong>can't be removed, transferred, or discarded</strong>. You <em>can</em> place a matching Attachment token <strong>on top</strong>, which deactivates the printed one until you remove the token (then it reactivates).</p>
+        <p>Distinct from a Hop-Up — and a single gun can have both.</p>
+        <span class="cite">pp. 4, 27</span>
+      </div>
+    </article>
+
+    <article class="qa">
+      <h3 class="q">What does <span class="tag">ENHANCE&mdash;SHOOT</span> do on a weapon?</h3>
+      <div class="a">
+        <p>An <strong>optional boost you layer onto a Shoot</strong>, played during the <strong>Aim</strong> step (1d). It costs <strong>no extra AP</strong> (it rides on the Shoot you're already making). The effect is whatever the card says — e.g., +damage per Hit.</p>
+        <p><strong class="accent">Limit: only 1 Enhance&mdash;Shoot per Shoot</strong> — and Instants that "Play as Enhance&mdash;Shoot" count toward that cap. Usable only during your own activation. Unlike a <span class="tag">PASSIVE</span> (always on), this is a deliberate one-per-shot choice.</p>
+        <span class="cite">pp. 28, 34, 40</span>
+      </div>
+    </article>
+
+    <article class="qa">
+      <h3 class="q">How do Optics affect weapon range?</h3>
+      <div class="a">
+        <p><strong>They don't change the weapon's range.</strong> They <strong>lower To-Hit Difficulty</strong> when the target is within the <strong>optic's own range band</strong>. Two separate concepts: the weapon's <strong>Optimal Range</strong> (unchanged; +10 To-Hit per space outside it) vs. the <strong>optic's band</strong> (where its bonus applies). Modifiers are cumulative, so an optic can <em>offset</em> an out-of-range penalty but never removes it.</p>
+        <p><em>Example — C.A.R. SMG at range 2:</em> +10 (one below optimal) &minus;5 (optic covers 1&ndash;2) = To-Hit <strong>55</strong>.</p>
+        <div class="tbl-scroll"><table>
+          <thead><tr><th>Optic</th><th>Rarity</th><th>Range</th><th>To-Hit</th></tr></thead>
+          <tbody>
+            <tr><td>1&times; HCOG "Classic" / 1&times; Holo</td><td class="r-common">Common</td><td>1&ndash;2</td><td>&minus;5</td></tr>
+            <tr><td>2&times; HCOG "Bruiser"</td><td class="r-rare">Rare</td><td>2&ndash;3</td><td>&minus;10</td></tr>
+            <tr><td>1&times;&ndash;2&times; Variable Holo</td><td class="r-rare">Rare</td><td>1&ndash;4</td><td>&minus;5</td></tr>
+            <tr><td>6&times; Sniper</td><td class="r-rare">Rare</td><td>5+</td><td>&minus;5</td></tr>
+            <tr><td>3&times; HCOG "Ranger" <span title="token art shows -10">&#9888;</span></td><td class="r-epic">Epic</td><td>4&ndash;6</td><td>&minus;15</td></tr>
+            <tr><td>2&times;&ndash;4&times; Variable AOG</td><td class="r-epic">Epic</td><td>2&ndash;5</td><td>&minus;10</td></tr>
+            <tr><td>4&times;&ndash;8&times; Variable Sniper</td><td class="r-epic">Epic</td><td>4+</td><td>&minus;10</td></tr>
+            <tr><td>1&times; Digital Threat</td><td class="r-legend">Legendary</td><td>1&ndash;2</td><td>&minus;15</td></tr>
+            <tr><td>8&times;&ndash;10&times; Digital Sniper Threat</td><td class="r-legend">Legendary</td><td>5+</td><td>&minus;15</td></tr>
+          </tbody>
+        </table></div>
+        <span class="cite">pp. 27, 43</span>
+      </div>
+    </article>
+  </section>
+
+  <!-- ============ 4. GEAR & SURVIVAL ============ -->
+  <section class="group" id="gear">
+    <h2><span class="num">Sec 4</span> Gear &amp; Survival</h2>
+
+    <article class="qa">
+      <h3 class="q">If you equip a blue (Rare) Body Shield in Stage 1, do you start at 30 shield?</h3>
+      <div class="a">
+        <p><strong>Yes — 30/30</strong>, but via two effects working together: equipping <strong>sets your limit to 30</strong>, <em>and</em> the Rare shield's equip bonus <strong>restores 10</strong> (20&rarr;30), topping you off. It then flips to <strong>Exhausted</strong>.</p>
+        <p><strong class="accent">The gotcha:</strong> "equip = start at the limit" is <em>not</em> the rule — the restore is what fills you. From a 20 start:</p>
+        <div class="tbl-scroll"><table>
+          <thead><tr><th>Shield equipped</th><th>Limit</th><th>Restore</th><th>Result</th></tr></thead>
+          <tbody>
+            <tr><td><span class="r-rare">Rare (blue)</span></td><td>30</td><td>+10</td><td><strong>30 / 30</strong> (full)</td></tr>
+            <tr><td><span class="r-epic">Epic (purple)</span></td><td>40</td><td>+10</td><td><strong>30 / 40</strong> — <span class="accent">not 40!</span></td></tr>
+            <tr><td><span class="r-legend">Legendary (gold)</span></td><td>40</td><td>+20</td><td><strong>40 / 40</strong> (full)</td></tr>
+          </tbody>
+        </table></div>
+        <span class="cite">pp. 30, 41</span>
+      </div>
+    </article>
+
+    <article class="qa">
+      <h3 class="q">What does the Helmet do?</h3>
+      <div class="a">
+        <p>Protects against <strong class="accent">Headshots only</strong> — never regular Hits or damage. It negates the headshot bonus on Hit cards whose <strong>raw Aim value</strong> (ignore board modifiers) is at or below its threshold, up to a card limit:</p>
+        <div class="tbl-scroll"><table>
+          <thead><tr><th>Rarity</th><th>Effect</th></tr></thead>
+          <tbody>
+            <tr><td class="r-common">Common</td><td>No effect</td></tr>
+            <tr><td class="r-rare">Rare</td><td>Ignore 1 headshot on a card of value &le;&nbsp;50</td></tr>
+            <tr><td class="r-epic">Epic</td><td>Ignore up to 2 headshots on cards &le;&nbsp;60</td></tr>
+            <tr><td class="r-legend">Legendary</td><td>Up to 2 &le;&nbsp;60, <em>plus</em> <span class="tag">SPECIAL ACTION: 1 AP</span> Interact &amp; Use</td></tr>
+          </tbody>
+        </table></div>
+        <p>Higher-value cards punch through the threshold; extra qualifying headshots beyond the card limit also get through.</p>
+        <span class="cite">pp. 29, 41</span>
+      </div>
+    </article>
+
+    <article class="qa">
+      <h3 class="q">Can you have more than 40 Health?</h3>
+      <div class="a">
+        <p><strong>No.</strong> 40 is <em>always</em> the Health limit — a permanent hard cap. Any excess healing is lost (Syringe, Medical Kit, Phoenix Kit all cap at 40).</p>
+        <p>Contrast with <strong>Shield</strong>, whose limit <em>does</em> vary by Body Shield (20 / 30 / 40 / 40) — that's the only side of your HP pool that can grow. An Epic-shielded Legend tops out at 40 Shield + 40 Health = <strong>80 total</strong>, but the Health half is locked at 40.</p>
+        <span class="cite">pp. 30&ndash;31, 42</span>
+      </div>
+    </article>
+
+    <article class="qa">
+      <h3 class="q">How does the Knockdown Shield work?</h3>
+      <div class="a">
+        <p>Your <strong>anti-elimination safety net</strong>. It triggers <strong>automatically</strong>, and <em>only</em> when damage would drop you to <strong>0 Health</strong>: it prevents up to its value, applies any remaining damage, then flips to <strong>Exhausted</strong>.</p>
+        <div class="tbl-scroll"><table>
+          <thead><tr><th>Rarity</th><th>Effect</th></tr></thead>
+          <tbody>
+            <tr><td class="r-common">Common</td><td>No effect</td></tr>
+            <tr><td class="r-rare">Rare</td><td>Prevent up to 10 damage</td></tr>
+            <tr><td class="r-epic">Epic</td><td>Prevent up to 15</td></tr>
+            <tr><td class="r-legend">Legendary</td><td>Prevent up to 15 + reduce Ring damage to 8</td></tr>
+          </tbody>
+        </table></div>
+        <p>If the overkill exceeds what it can prevent, you're <strong>still eliminated</strong>. Refresh it by getting eliminated (the reset re-activates it) or by equipping a fresh one — <strong>no consumable recharges it</strong>.</p>
+        <span class="cite">pp. 30&ndash;31, 41</span>
+      </div>
+    </article>
+  </section>
+
+  <!-- ============ 5. MOVEMENT ============ -->
+  <section class="group" id="movement">
+    <h2><span class="num">Sec 5</span> Movement &amp; Positioning</h2>
+
+    <article class="qa">
+      <h3 class="q">Is a (full) Wall an obstacle?</h3>
+      <div class="a">
+        <p><strong>Yes</strong> — Walls are <span class="tag">OBSTACLE</span>s (<strong>+1 MP</strong> to cross, same level or one level up). But a full Wall is <em>also</em> a <span class="tag">BLOCKAGE</span> (blocks Line of Sight) and a <span class="tag">LEVEL</span> component — unlike a Half-Wall, which is only an Obstacle + Cover.</p>
+        <p><strong>Level caveat:</strong> you <strong>can't cross a Wall that sits a level above you</strong> (that's the cross-levels rule, not the obstacle tag). And crossing <em>downward</em> across an obstacle is free.</p>
+        <span class="cite">pp. 18&ndash;19, 23</span>
+      </div>
+    </article>
+
+    <article class="qa">
+      <h3 class="q">What is cover — and does it cost MP to cross?</h3>
+      <div class="a">
+        <p><strong>Cover</strong> (<span class="tag">COVER</span>: Half-Walls, Respawn Beacons, Supply Bins) makes you harder to hit but <strong>does not block LoS</strong>. You're "behind cover" when the LoS <strong>crosses a cover object</strong> (or a connected intersection with cover) and you are <strong>adjacent</strong> to it. Then any Aim card showing the <strong>Cover Auto-Miss icon</strong> automatically misses.</p>
+        <p><strong>Cover itself costs no MP</strong> — the <span class="tag">OBSTACLE</span> tag is what charges +1. Those objects just happen to be Obstacles (Half-Walls, Bins) or Impassable (Beacons), so crossing them costs for <em>that</em> reason.</p>
+        <span class="cite">pp. 23, 29</span>
+      </div>
+    </article>
+
+    <article class="qa">
+      <h3 class="q">What happens if you're pushed off the map?</h3>
+      <div class="a">
+        <p>You <strong>can't be</strong> — the Map edge is a hard boundary, so it's a <strong class="accent">Collision</strong>. You <strong>stop at the edge</strong> (don't leave), take <strong>Collision damage</strong> (4 from a Melee Attack, or the amount on the card causing the Push), and the Push <strong>ends immediately</strong>.</p>
+        <p><strong>No ring-out elimination</strong> like the video game — you simply bonk the border. (That damage is normal damage, so it <em>could</em> still finish you via Life &amp; Death, but "going off the map" never kills you on its own.)</p>
+        <span class="cite">pp. 18, 33</span>
+      </div>
+    </article>
+
+    <article class="qa">
+      <h3 class="q">How do you push diagonally?</h3>
+      <div class="a">
+        <p>The push direction <strong>isn't a free choice</strong> — you shove the target <strong>straight away from you</strong>, along the line drawn from your space through theirs. If they're on a <strong>diagonal-adjacent</strong> space, that line is diagonal &rarr; a <strong>diagonal push</strong>, one diagonal space at a time, in that same direction only (no bending mid-push).</p>
+        <p>Each step still checks for Collision; on a diagonal, watch the <strong>"intersection of connected components"</strong> trigger — a diagonal move crosses that corner point.</p>
+        <span class="cite">pp. 18, 20, 33</span>
+      </div>
+    </article>
+  </section>
+
+  <!-- ============ 6. GRENADES & ABILITIES ============ -->
+  <section class="group" id="abilities">
+    <h2><span class="num">Sec 6</span> Grenades &amp; Abilities</h2>
+
+    <article class="qa">
+      <h3 class="q">Does <span class="tag">IMPASSABLE</span> block grenades?</h3>
+      <div class="a">
+        <p><strong>No</strong> — <span class="tag">IMPASSABLE</span> is a <strong>movement-only</strong> tag (it stops Legends from entering a space). Grenade <strong>landing ignores all components</strong> and can even land on an impassable object's space; grenade <strong>AoE is limited by <span class="tag">BLOCKAGE</span></strong> (Walls) and levels — <em>not</em> by Impassable.</p>
+        <p>So a Respawn Beacon (Impassable + Cover, but <em>not</em> a Blockage) blocks neither the throw nor the blast. <span class="tag">AERIAL</span> grenades (e.g., Rolling Thunder) ignore even Blockages and levels.</p>
+        <span class="cite">pp. 18, 31&ndash;32</span>
+      </div>
+    </article>
+
+    <article class="qa">
+      <h3 class="q">Do Thermite grenades persist / leave lingering fire?</h3>
+      <div class="a">
+        <p><strong>No.</strong> Like all grenades, Thermite is <strong>single-use</strong>: throw &rarr; scatter (draw 1 Aim card) &rarr; deal <strong>15 damage</strong> to Legends in the AoE &rarr; <strong>token removed</strong>. The video game's lingering wall of fire is <strong>not modeled</strong>.</p>
+        <p>The only things that stay on the Map are ability miniatures tagged <span class="tag">PERSISTENT</span> — grenades carry no such tag.</p>
+        <span class="cite">pp. 32, 42</span>
+      </div>
+    </article>
+
+    <article class="qa">
+      <h3 class="q">What if a Legend is dead when their ability triggers?</h3>
+      <div class="a">
+        <p>It <strong>still triggers.</strong> Timed abilities (<span class="tag">DELAY</span> / <span class="tag">DURATION</span>) resolve via the <strong>Resolve Initiative-Marker Effects</strong> step based on the token's position — not by the Legend performing an action — so elimination doesn't stop them. Elimination removes only the Legend's <em>own</em> mini, and cooldowns keep ticking while they're dead.</p>
+        <p>The one thing that cancels a pending ability is <strong>Destroying its miniature</strong> (which sends the token straight to cooldown) — and that's not the same as killing the owner. <em>Caveat: this is inferred from the timing rules, not stated verbatim; check the Legend's info sheet for special wording.</em></p>
+        <span class="cite">pp. 15, 31, 34, 38</span>
+      </div>
+    </article>
+  </section>
+
+  <p class="noresults" id="noresults">No Q&amp;A matches that search.</p>
+
+  <footer>
+    <h3>Known source inconsistencies (flagged in the rules transcription)</h3>
+    <ul>
+      <li class="warn"><strong>Longbow DMR headshot damage:</strong> the card shows <strong>18</strong>; a worked example on p.&nbsp;30 uses 14. Treat the <strong>card (18)</strong> as authoritative.</li>
+      <li class="warn"><strong>3&times; HCOG "Ranger" optic:</strong> token art shows <strong>&minus;10</strong> while the prose says <strong>&minus;15</strong>. Verify against your physical token.</li>
+      <li class="warn"><strong>Respawn shield:</strong> a flat <strong>20</strong>, not a refill to your equipped Body Shield's limit.</li>
+    </ul>
+    <p style="color:var(--muted-2);font-size:12.5px;margin-top:18px">
+      Quick-reference companion compiled from a rules Q&amp;A session &middot; First-game / Battle Royale config (Crossroads + Ring).
+      Full transcription: <a class="src" href="rules.md">rules.md</a> &middot; Page cites reference <em>APEX_CoreRules_060624</em>. The rulebook itself is the final authority.
+    </p>
+  </footer>
+</div>
+
+<script>
+  (function(){
+    // Theme toggle
+    var root = document.documentElement;
+    document.getElementById('themeBtn').addEventListener('click', function(){
+      var cur = root.getAttribute('data-theme');
+      if(!cur){ cur = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'; }
+      root.setAttribute('data-theme', cur === 'light' ? 'dark' : 'light');
+    });
+
+    // Search filter
+    var search = document.getElementById('search');
+    var count  = document.getElementById('count');
+    var none   = document.getElementById('noresults');
+    var cards  = Array.prototype.slice.call(document.querySelectorAll('.qa'));
+    var groups = Array.prototype.slice.call(document.querySelectorAll('section.group'));
+    var total  = cards.length;
+
+    function update(){
+      var q = search.value.trim().toLowerCase();
+      var shown = 0;
+      cards.forEach(function(c){
+        var hit = !q || c.textContent.toLowerCase().indexOf(q) !== -1;
+        c.style.display = hit ? '' : 'none';
+        if(hit) shown++;
+      });
+      groups.forEach(function(g){
+        var any = g.querySelector('.qa:not([style*="display: none"])');
+        g.style.display = any ? '' : 'none';
+      });
+      none.style.display = shown === 0 ? 'block' : 'none';
+      count.textContent = q ? (shown + ' of ' + total + ' shown') : (total + ' questions');
+    }
+    search.addEventListener('input', update);
+    update();
+  })();
+</script>
